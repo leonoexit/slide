@@ -23,15 +23,23 @@ pip install -r requirements.txt
 playwright install chromium
 ```
 
-### 2️⃣ Cài Đặt Fonts (QUAN TRỌNG!)
+### 2️⃣ Cài Đặt Fonts (🚨 CỰC KỲ QUAN TRỌNG!)
 
-**Tự động (khuyến nghị):**
+**⚠️ NẾU FONTS CHƯA CÀI → FONTS TRONG PDF/PNG SẼ BỊ SAI!**
+
+**Cách nhanh nhất:**
 ```bash
-python download_fonts_final.py
+python download_fonts_simple.py
 ```
 
-**Thủ công:**
-- Xem hướng dẫn chi tiết trong [FONTS_SETUP.md](FONTS_SETUP.md)
+**Nếu script trên không hoạt động:**
+- Xem [FONTS_DOWNLOAD_GUIDE.md](FONTS_DOWNLOAD_GUIDE.md) - Hướng dẫn chi tiết với links trực tiếp
+- Hoặc [FONTS_SETUP.md](FONTS_SETUP.md) - Hướng dẫn kỹ thuật đầy đủ
+
+**Kiểm tra fonts:**
+```bash
+ls -lh fonts/*.woff2  # Phải có 4 file, mỗi file 15-40 KB
+```
 
 ### 3️⃣ Chạy Script
 

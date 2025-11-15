@@ -68,6 +68,33 @@ def select_html_file(html_files):
             sys.exit(0)
 
 
+def check_fonts_directory():
+    """
+    Kiểm tra thư mục fonts có đầy đủ không
+
+    Returns:
+        tuple: (bool, list) - (có đủ fonts không, danh sách fonts thiếu)
+    """
+    required_fonts = [
+        'fonts/DMSans-Regular.woff2',
+        'fonts/DMSans-Medium.woff2',
+        'fonts/DMSans-Bold.woff2',
+        'fonts/SpaceGrotesk-Bold.woff2'
+    ]
+
+    missing = []
+    for font in required_fonts:
+        if not os.path.exists(font):
+            missing.append(os.path.basename(font))
+        else:
+            # Kiểm tra kích thước file (phải > 5KB)
+            size = os.path.getsize(font)
+            if size < 5000:
+                missing.append(f"{os.path.basename(font)} (file quá nhỏ: {size} bytes)")
+
+    return len(missing) == 0, missing
+
+
 def get_html_file(args_file=None):
     """
     Lấy file HTML để xử lý
@@ -129,10 +156,27 @@ def html_to_pdf(html_file, pdf_file):
         page = browser.new_page()
 
         # Mở file HTML
-        page.goto(html_url)
+        page.goto(html_url, wait_until='networkidle')
 
-        # Đợi page load xong
-        page.wait_for_load_state('networkidle')
+        # QUAN TRỌNG: Đợi fonts load xong
+        print("  → Đang đợi fonts load...")
+        try:
+            # Đợi document.fonts.ready promise resolve
+            page.wait_for_function('document.fonts.ready')
+
+            # Kiểm tra số lượng fonts đã load
+            fonts_loaded = page.evaluate('''() => {
+                return document.fonts.size;
+            }''')
+            print(f"  → Đã load {fonts_loaded} fonts")
+
+        except Exception as e:
+            print(f"  ⚠ Cảnh báo: Không thể verify fonts: {e}")
+            # Vẫn tiếp tục, nhưng đợi thêm 1s cho chắc
+            page.wait_for_timeout(1000)
+
+        # Đợi thêm một chút để đảm bảo render hoàn tất
+        page.wait_for_timeout(500)
 
         # Xuất PDF với cấu hình chính xác
         page.pdf(
@@ -145,7 +189,8 @@ def html_to_pdf(html_file, pdf_file):
                 'bottom': '0',
                 'left': '0',
                 'right': '0'
-            }
+            },
+            prefer_css_page_size=False
         )
 
         browser.close()
@@ -269,6 +314,31 @@ def main():
     try:
         # Lấy file HTML (từ argument hoặc tự động tìm)
         html_file = get_html_file(args.html_file)
+
+        # Kiểm tra fonts
+        fonts_ok, missing_fonts = check_fonts_directory()
+        if not fonts_ok:
+            print()
+            print("⚠️  CẢNH BÁO: FONTS CHƯA ĐẦY ĐỦ!")
+            print("-" * 60)
+            print("Các fonts bị thiếu hoặc lỗi:")
+            for font in missing_fonts:
+                print(f"  ✗ {font}")
+            print()
+            print("❌ Fonts sẽ KHÔNG hiển thị đúng trong PDF/PNG!")
+            print()
+            print("📥 Tải fonts ngay:")
+            print("  1. Chạy: python download_fonts_simple.py")
+            print("  2. Hoặc xem: FONTS_DOWNLOAD_GUIDE.md")
+            print("-" * 60)
+            print()
+
+            response = input("Vẫn muốn tiếp tục? (y/N): ").strip().lower()
+            if response != 'y':
+                print("Đã hủy. Vui lòng tải fonts trước khi chạy lại.")
+                sys.exit(1)
+        else:
+            print("\n✓ Fonts đã sẵn sàng")
 
         # Cấu hình từ arguments
         temp_pdf_file = args.pdf

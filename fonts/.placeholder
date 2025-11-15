@@ -1,0 +1,11 @@
+# Fonts Directory
+
+⚠️ **IMPORTANT:** This directory must contain 4 font files for the script to work correctly!
+
+Required files:
+- DMSans-Regular.woff2
+- DMSans-Medium.woff2
+- DMSans-Bold.woff2
+- SpaceGrotesk-Bold.woff2
+
+See FONTS_DOWNLOAD_GUIDE.md for download instructions.
