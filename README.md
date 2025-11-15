@@ -35,8 +35,26 @@ python download_fonts_final.py
 
 ### 3️⃣ Chạy Script
 
+**Cách đơn giản nhất** (tự động tìm file .html):
 ```bash
 python html_to_pdf_png.py
+```
+
+**Chỉ định file cụ thể:**
+```bash
+python html_to_pdf_png.py myslides.html
+```
+
+**Tùy chọn nâng cao:**
+```bash
+# Chỉ định thư mục output
+python html_to_pdf_png.py -o my_images/
+
+# Tăng chất lượng ảnh (zoom 3x = 3600x3600px)
+python html_to_pdf_png.py myslides.html -z 3
+
+# Xem tất cả options
+python html_to_pdf_png.py -h
 ```
 
 ---
@@ -53,15 +71,43 @@ playwright install chromium
 
 ## 🚀 Sử dụng
 
+### Cách Sử Dụng Cơ Bản
+
 ```bash
+# Tự động tìm file .html trong thư mục
 python html_to_pdf_png.py
+
+# Hoặc chỉ định file cụ thể
+python html_to_pdf_png.py myslides.html
 ```
 
-Script sẽ:
-1. Đọc file `name.html`
+### Options Nâng Cao
+
+```bash
+# Xem tất cả options
+python html_to_pdf_png.py -h
+
+# Chỉ định thư mục output
+python html_to_pdf_png.py -o my_output/
+
+# Tùy chỉnh zoom factor (chất lượng ảnh)
+python html_to_pdf_png.py -z 3  # Tạo ảnh 3600x3600px
+
+# Kết hợp nhiều options
+python html_to_pdf_png.py slides.html -o output/ -z 2
+```
+
+### Script Sẽ:
+1. Tự động tìm hoặc nhận file HTML được chỉ định
 2. Tạo file PDF tạm thời
-3. Tách PDF thành các file PNG trong thư mục `slides_images/`
-4. Xóa file PDF tạm
+3. Tách PDF thành các file PNG trong thư mục output
+4. Tự động xóa file PDF tạm
+
+### Tính Năng Thông Minh:
+- ✅ Không cần đổi tên file HTML thành `name.html` nữa
+- ✅ Nếu có nhiều file .html, script sẽ hiển thị menu để chọn
+- ✅ Tự động validate file tồn tại và đúng định dạng
+- ✅ Hiển thị cấu hình trước khi chạy
 
 ## 📁 Cấu trúc file
 

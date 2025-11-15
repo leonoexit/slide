@@ -53,20 +53,49 @@ Bạn cần có 4 file:
 ## 📁 Chuẩn bị
 
 Đảm bảo:
-1. File `name.html` nằm trong cùng thư mục với script `html_to_pdf_png.py`
+1. File HTML của bạn (tên bất kỳ, có extension `.html`)
 2. Thư mục `fonts/` đã có đủ 4 file fonts (xem bước 3 ở trên)
+3. File HTML và script nằm trong cùng thư mục
+
+**Lưu ý:** Bạn **KHÔNG CẦN** đổi tên file HTML thành `name.html` nữa!
 
 ## ▶️ Chạy script
+
+### Cách 1: Tự động tìm file HTML
 
 ```bash
 python html_to_pdf_png.py
 ```
 
-Hoặc:
+Script sẽ tự động:
+- Tìm tất cả file `.html` trong thư mục
+- Nếu chỉ có 1 file: sử dụng file đó
+- Nếu có nhiều file: hiển thị menu để bạn chọn
+
+### Cách 2: Chỉ định file cụ thể
 
 ```bash
-python3 html_to_pdf_png.py
+python html_to_pdf_png.py myslides.html
 ```
+
+### Cách 3: Tùy chỉnh options
+
+```bash
+# Chỉ định thư mục output
+python html_to_pdf_png.py -o my_images/
+
+# Tăng chất lượng ảnh (zoom 3x)
+python html_to_pdf_png.py myslides.html -z 3
+
+# Xem tất cả options
+python html_to_pdf_png.py -h
+```
+
+**Các options có sẵn:**
+- `-o, --output`: Thư mục chứa ảnh PNG (mặc định: `slides_images`)
+- `-z, --zoom`: Hệ số phóng đại (mặc định: 2)
+- `-p, --pdf`: Tên file PDF tạm (mặc định: `temp_slides.pdf`)
+- `-h, --help`: Hiển thị help
 
 ## 📤 Kết quả
 
@@ -82,14 +111,29 @@ Mỗi ảnh có kích thước **2400x2400 pixels** (chất lượng cao, phóng
 
 ## ⚙️ Cấu hình
 
-Bạn có thể chỉnh sửa các thông số trong file `html_to_pdf_png.py`:
+**Không cần chỉnh sửa code!** Tất cả cấu hình được thực hiện qua command line:
 
-```python
-HTML_FILE = "name.html"           # Tên file HTML đầu vào
-TEMP_PDF_FILE = "temp_slides.pdf" # Tên file PDF tạm thời
-OUTPUT_DIR = "slides_images"      # Thư mục chứa ảnh đầu ra
-ZOOM_FACTOR = 2                   # Hệ số phóng đại (2 = ảnh 2400x2400px)
+```bash
+# Thay đổi thư mục output
+python html_to_pdf_png.py -o my_output/
+
+# Thay đổi zoom factor
+python html_to_pdf_png.py -z 3  # Tạo ảnh 3600x3600px
+
+# Thay đổi tên file PDF tạm
+python html_to_pdf_png.py -p custom_temp.pdf
+
+# Kết hợp tất cả
+python html_to_pdf_png.py myslides.html -o output/ -z 2 -p temp.pdf
 ```
+
+**Bảng zoom factor:**
+| Zoom | Kích thước ảnh | Kích thước file | Khuyến nghị |
+|------|----------------|-----------------|-------------|
+| 1    | 1200x1200px    | ~50-100 KB      | Web nhỏ     |
+| 2    | 2400x2400px    | ~200-400 KB     | ✅ Mặc định |
+| 3    | 3600x3600px    | ~500-800 KB     | In ấn       |
+| 4    | 4800x4800px    | ~1-2 MB         | Poster      |
 
 ## 📝 Lưu ý
 
